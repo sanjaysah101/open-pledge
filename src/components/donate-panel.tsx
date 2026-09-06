@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { VoiceReceipt } from "@/components/voice-receipt";
+import { byokHeaders } from "@/lib/byok";
 import type { Donation } from "@/lib/donations/types";
 import { shortSig, usd } from "@/lib/format";
 
@@ -46,7 +47,11 @@ export function DonatePanel({ campaignId }: { campaignId: string }) {
     try {
       const res = await fetch("/api/donate", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          // Forward any browser-stored BYOK keys for this request only.
+          ...byokHeaders(["gemini", "elevenlabs"]),
+        },
         body: JSON.stringify({
           campaignId,
           amountUsd: Math.round(amount),
@@ -179,7 +184,10 @@ export function DonatePanel({ campaignId }: { campaignId: string }) {
                   </blockquote>
                 )}
 
-                <VoiceReceipt donationId={receipt.donation.id} />
+                <VoiceReceipt
+                  donationId={receipt.donation.id}
+                  fallbackText={receipt.donation.thankYouNote}
+                />
 
                 <div className="flex items-center justify-between rounded-lg border border-border/60 bg-muted/40 px-3 py-2 text-xs">
                   <div className="flex items-center gap-2">

@@ -49,16 +49,24 @@ export async function POST(request: Request) {
   const id = `dn_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
   const cleanDonor = donorName && donorName.length > 0 ? donorName : "Anonymous";
 
+  // Bring-your-own-key: judges can supply their own keys per request. Used for
+  // this request only; never persisted server-side.
+  const geminiKey = request.headers.get("x-gemini-key") ?? undefined;
+  const elevenKey = request.headers.get("x-elevenlabs-key") ?? undefined;
+
   // 1. Anchor on Solana (confirmed on devnet, or honestly-flagged simulation).
   const ledger = await anchorDonation(id);
 
   // 2. Generate a personal thank-you note with Gemini.
-  const thankYouNote = await generateThankYouNote({
-    campaign,
-    donorName: cleanDonor,
-    amountUsd,
-    message,
-  });
+  const thankYouNote = await generateThankYouNote(
+    {
+      campaign,
+      donorName: cleanDonor,
+      amountUsd,
+      message,
+    },
+    geminiKey
+  );
 
   const donation: Donation = {
     id,
@@ -72,7 +80,9 @@ export async function POST(request: Request) {
     ledgerStatus: ledger.status,
     cluster: ledger.cluster,
     thankYouNote,
-    hasVoiceReceipt: isVoiceConfigured(),
+    // Offer the voice receipt when a server key exists OR the donor brought
+    // their own ElevenLabs key with this request.
+    hasVoiceReceipt: isVoiceConfigured() || Boolean(elevenKey?.trim()),
   };
 
   addDonation(donation);

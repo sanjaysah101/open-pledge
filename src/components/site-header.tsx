@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { HandHeart } from "lucide-react";
 
+import { ByokDialog } from "@/components/byok-dialog";
 import { ThemeToggle } from "@/theme/theme-toggle";
 
 const NAV = [
@@ -36,6 +37,9 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <div className="hidden sm:block">
+            <ByokDialog />
+          </div>
           <ThemeToggle />
         </div>
       </div>

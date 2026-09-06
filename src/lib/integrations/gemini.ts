@@ -30,8 +30,11 @@ function fallbackNote({ campaign, donorName, amountUsd }: ThankYouParams): strin
   return `${who}thank you for your $${amountUsd} gift to "${campaign.title}" by ${campaign.organization}. Your generosity moves ${campaign.location} one real step closer — every dollar is recorded openly so you can see exactly what it builds.`;
 }
 
-export async function generateThankYouNote(params: ThankYouParams): Promise<string> {
-  const apiKey = process.env.GEMINI_API_KEY;
+export async function generateThankYouNote(
+  params: ThankYouParams,
+  byokKey?: string
+): Promise<string> {
+  const apiKey = byokKey?.trim() || process.env.GEMINI_API_KEY;
   if (!apiKey) return fallbackNote(params);
 
   const { campaign, donorName, amountUsd, message } = params;
