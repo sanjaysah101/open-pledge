@@ -25,6 +25,14 @@ interface ThankYouParams {
 
 const MODEL = process.env.GEMINI_MODEL ?? "gemini-2.5-flash";
 
+/** Reject after `ms` so a slow upstream call falls back instead of hanging. */
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((_, reject) => setTimeout(() => reject(new Error("timeout")), ms)),
+  ]);
+}
+
 function fallbackNote({ campaign, donorName, amountUsd }: ThankYouParams): string {
   const who = donorName && donorName !== "Anonymous" ? `${donorName}, ` : "";
   return `${who}thank you for your $${amountUsd} gift to "${campaign.title}" by ${campaign.organization}. Your generosity moves ${campaign.location} one real step closer — every dollar is recorded openly so you can see exactly what it builds.`;
@@ -82,14 +90,18 @@ export async function generateImpactSummary(input: {
 
   try {
     const ai = new GoogleGenAI({ apiKey });
-    const response = await ai.models.generateContent({
-      model: MODEL,
-      contents: [
-        "Write one uplifting sentence (max 30 words, no emojis, no markdown) summarizing",
-        "collective donor impact for a transparent giving platform.",
-        `Total raised: $${input.totalRaisedUsd}. Donations: ${input.donationCount}. Campaigns: ${input.campaignsSupported}.`,
-      ].join("\n"),
-    });
+    // Cap the wait so a slow model call never stalls the Impact page render.
+    const response = await withTimeout(
+      ai.models.generateContent({
+        model: MODEL,
+        contents: [
+          "Write one uplifting sentence (max 30 words, no emojis, no markdown) summarizing",
+          "collective donor impact for a transparent giving platform.",
+          `Total raised: $${input.totalRaisedUsd}. Donations: ${input.donationCount}. Campaigns: ${input.campaignsSupported}.`,
+        ].join("\n"),
+      }),
+      6000
+    );
     return response.text?.trim() || fallback;
   } catch {
     return fallback;

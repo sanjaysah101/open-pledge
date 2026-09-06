@@ -6,7 +6,7 @@ tags: devchallenge, weekendchallenge, webdev, ai
 cover_image: ""
 ---
 
-*This is a submission for the [DEV Weekend Challenge: Generosity Edition](https://dev.to/challenges/weekend-2026-09-03).*
+*This is a submission for [Weekend Challenge: Generosity Edition](https://dev.to/challenges/weekend-2026-09-03)*
 
 ## The problem, in one sentence
 
@@ -33,9 +33,22 @@ Here's an **actual donation recorded on the Solana blockchain** during testing �
 
 That link is the whole point of the project: your generosity leaves a permanent, public, verifiable trail.
 
-> 🔗 **Live app:** <!-- add your deployed URL -->
-> 💻 **Source code:** <!-- add your GitHub repo URL -->
-> 📸 **Screens/GIF:** <!-- add a short demo GIF of the donation flow -->
+> 🔗 **Live app:** [open-pledge.vercel.app](https://open-pledge.vercel.app/)
+> 💻 **Source code:** [github.com/sanjaysah101/open-pledge](https://github.com/sanjaysah101/open-pledge)
+
+### A quick look
+
+**Home — "Give small. See everything."**
+![OpenPledge home page](./docs/screenshots/home.png)
+
+**Browse causes**
+![OpenPledge campaigns page](./docs/screenshots/campaigns.png)
+
+**Give, and get an instant receipt**
+![OpenPledge campaign detail and donation form](./docs/screenshots/campaign-detail.png)
+
+**Proof on the blockchain** — the same donation, live on Solana Explorer
+![The donation confirmed on Solana Explorer](./docs/screenshots/solana-transaction.png)
 
 ### The three pages
 - **Give:** browse causes and donate. A receipt pops up with your AI thank-you note, a play-voice button, and your blockchain link.

@@ -13,6 +13,20 @@ accountable as a $5,000 one.
 > highlights: technology-driven giving, youth leadership, equity & inclusion,
 > and climate & poverty.
 
+**🔗 Live app:** [open-pledge.vercel.app](https://open-pledge.vercel.app/) ·
+**💻 Repo:** [github.com/sanjaysah101/open-pledge](https://github.com/sanjaysah101/open-pledge)
+
+---
+
+## 📸 Screenshots
+
+|  |  |
+| --- | --- |
+| **Home** — "Give small. See everything." | **Browse causes** |
+| ![Home](./docs/screenshots/home.png) | ![Campaigns](./docs/screenshots/campaigns.png) |
+| **Give & get an instant receipt** | **Proof on Solana Explorer** |
+| ![Campaign detail](./docs/screenshots/campaign-detail.png) | ![Solana transaction](./docs/screenshots/solana-transaction.png) |
+
 ---
 
 ## ✨ What it does
