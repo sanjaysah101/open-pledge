@@ -1,0 +1,10 @@
+{
+  "$schema": "https://notils.com/schema.json",
+  "shape": "standalone",
+  "scope": null,
+  "paths": {
+    "packages": "packages",
+    "lib": "src/lib",
+    "components": "src/components"
+  }
+}
