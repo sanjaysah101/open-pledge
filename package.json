@@ -14,6 +14,9 @@
     "format": "biome format --write .",
     "ui:add": "shadcn add",
     "ui:diff": "shadcn add --diff",
+    "gen:solana-key": "bun run scripts/gen-solana-key.ts",
+    "check:solana-key": "bun run scripts/check-solana-key.ts",
+    "check:snowflake": "bun run scripts/check-snowflake.ts",
     "prepare": "husky",
     "notils": "notils"
   },

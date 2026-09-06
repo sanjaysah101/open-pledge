@@ -1,83 +1,79 @@
 ---
-title: "OpenPledge — Give small, see everything: radically transparent micro-donations"
+title: "OpenPledge: See Exactly Where Your Donation Goes (Blockchain + AI for Charity)"
 published: false
-tags: devchallenge, weekendchallenge, webdev, nextjs
+description: "OpenPledge is a transparent micro-donation app. Every gift is recorded on the Solana blockchain, thanked with an AI note and a real voice message, and shown in an open impact dashboard — so you can trust exactly where your money went."
+tags: devchallenge, weekendchallenge, webdev, ai
+cover_image: ""
 ---
 
-*This is a submission for [Weekend Challenge: Generosity Edition](https://dev.to/challenges/weekend-2026-09-03)*
+*This is a submission for the [DEV Weekend Challenge: Generosity Edition](https://dev.to/challenges/weekend-2026-09-03).*
 
-## What I Built
+## The problem, in one sentence
 
-**OpenPledge** is a transparent micro-donation platform for small nonprofits.
+When you donate $5 to a small charity online, you have **no idea what actually happens to it** — and you usually never hear back.
 
-The idea started from a simple discomfort: when I give $5 to a small cause, I
-have no idea what happens next. Big platforms ask me to *trust* them. So I built
-the opposite — a giving experience where you don't have to trust anyone, because
-you can **see everything**.
+Big donation platforms ask you to *trust them*. **OpenPledge** flips that around: it's a giving app where you don't have to trust anyone, because you can **see everything**.
 
-When you make a gift on OpenPledge, four things happen in the same moment:
+## What I built
 
-1. 🪙 **The gift is anchored on a public Solana ledger** with a verifiable
-   signature anyone can look up.
-2. 🤖 **Google Gemini writes you a personal thank-you note** — warm, specific to
-   the cause, not a canned receipt.
-3. 🔊 **ElevenLabs narrates that note into a voice receipt** — more accessible
-   and far more human than text alone.
-4. ❄️ **Snowflake mirrors the donation** and powers an open impact dashboard so
-   the *whole community* can see aggregate totals, giving by theme, and trends.
+**OpenPledge is a "glass box" for charity.** You pick a cause, give any amount, and in that same moment four things happen — each one making your gift more transparent and more human:
 
-There's also a **public ledger page** — every donation, listed openly, linkable
-to a Solana explorer, no login required. Accountability by default.
+1. 🪙 **Your donation is written onto the [Solana](https://solana.com/) blockchain.** Think of it as a public receipt that no one can secretly edit or delete. Anyone in the world can look it up.
+2. 🤖 **[Google Gemini](https://ai.google.dev/) writes you a personal thank-you note.** Not a canned "Thanks for your donation!" — a warm, specific message about the exact cause you supported.
+3. 🔊 **[ElevenLabs](https://elevenlabs.io/) reads that note out loud** in a natural human voice, so you get a real spoken thank-you. (If the voice service is unavailable, the app falls back to your browser's built-in voice so it *always* speaks.)
+4. ❄️ **[Snowflake](https://www.snowflake.com/) keeps the big-picture numbers** — total raised, gifts by cause, trends over time — and powers a public **Impact Dashboard** the whole community can see.
 
-I designed the six demo campaigns around the UN charity themes the prompt
-highlights: clean water (climate & poverty), a girls' code lab (equity &
-inclusion), a youth-led food-rescue brigade (youth leadership), open-source
-assistive devices (tech-driven giving), reforestation, and winter kits for
-unhoused neighbors.
+There's also a **public ledger page**: a plain, honest list of every donation with a link to its blockchain record. No login, no sign-up, nothing hidden.
 
-## Demo
+## See it working (this is real, not a mock-up)
 
-<!-- Add your live URL and/or screenshots/GIFs here -->
+Here's an **actual donation recorded on the Solana blockchain** during testing — click it and you'll see the live transaction on the official Solana Explorer:
 
-**The donation flow (the heart of it):** pick an amount → your gift instantly
-appears in "Recent gifts," a thank-you dialog shows the Gemini note, a "Play
-voice receipt" button, and the Solana signature with an explorer link.
+👉 [View the on-chain donation on Solana Explorer](https://explorer.solana.com/tx/ecbZYjXooQJnhD2UkXNu9G95QAiC7V9R3EqVQrqkeBCGLHBZHYhwN1FrkhhpXzstfnYEniVwQh115PA7pRRf9SD?cluster=devnet)
 
-**Public ledger:** `/ledger` — every gift with its on-chain reference.
-**Impact dashboard:** `/impact` — Snowflake-backed aggregates + a Gemini-written
-summary.
+That link is the whole point of the project: your generosity leaves a permanent, public, verifiable trail.
 
-> 🔗 Repo: <!-- your repo URL -->
+> 🔗 **Live app:** <!-- add your deployed URL -->
+> 💻 **Source code:** <!-- add your GitHub repo URL -->
+> 📸 **Screens/GIF:** <!-- add a short demo GIF of the donation flow -->
 
-## How I used the prize technologies
+### The three pages
+- **Give:** browse causes and donate. A receipt pops up with your AI thank-you note, a play-voice button, and your blockchain link.
+- **Ledger (`/ledger`):** every gift, listed openly, each linkable to Solana Explorer.
+- **Impact (`/impact`):** live totals and charts powered by Snowflake, plus a one-line summary written by Gemini.
 
-I integrated **all four** categories, each doing real work rather than being
-bolted on:
+## Why "generosity" — the causes
 
-- **Solana** — every donation is anchored on devnet; the UI surfaces the
-  signature and an explorer link, and honestly labels confirmed vs. simulated.
-- **Google AI (Gemini)** — generates the per-donor thank-you notes *and* the
-  impact-dashboard summary sentence.
-- **ElevenLabs** — text-to-speech turns each thank-you note into a voice
-  receipt, streamed on demand.
-- **Snowflake** — donations mirror into a `DONATIONS` table; the dashboard reads
-  aggregates back with SQL (with a local fallback so it's always populated).
+I built six example campaigns around the charity themes the [International Day of Charity](https://en.wikipedia.org/wiki/International_Day_of_Charity) and the challenge highlight, so the demo feels real:
 
-A design principle I stuck to: **every integration degrades gracefully.** With
-no API keys, the app runs in a full demo mode and *tells you* which path
-produced each result. That honesty felt on-theme for a project about
-transparency.
+- 💧 Clean water for a school *(climate & poverty)*
+- 👩‍💻 A neighborhood code lab for girls *(equity & inclusion)*
+- 🚲 A youth-led food-rescue bike brigade *(youth leadership)*
+- 🦾 Free 3D-printed assistive devices *(tech-driven giving)*
+- 🌱 Replanting a wildfire-burnt ridge
+- 🧣 Winter survival kits for unhoused neighbors
 
-## Tech stack & notes
+## How I used each sponsor technology
 
-Built with **Bun + Next.js 16 (App Router, React Compiler) + Tailwind v4 +
-shadcn/ui on Base UI**, scaffolded with
-[`create-notils`](https://www.npmjs.com/package/create-notils) and lint/format
-via Biome.
+I integrated **all four** prize technologies, and each one does real work — none are bolted on for show:
 
-- **Demo mode by design** — no real funds ever move. The on-chain footprint is a
-  symbolic anchor, not custody of money.
-- Everything was built within the challenge window.
+| Technology | What it does in OpenPledge |
+| --- | --- |
+| [**Solana**](https://solana.com/docs) | Records every donation on-chain (devnet) with a verifiable signature and explorer link. |
+| [**Google AI / Gemini**](https://ai.google.dev/gemini-api/docs) | Writes each donor's personal thank-you note and the impact-page summary. |
+| [**ElevenLabs**](https://elevenlabs.io/docs) | Turns the thank-you note into natural-sounding speech (a "voice receipt"). |
+| [**Snowflake**](https://docs.snowflake.com/) | Stores donations and powers the aggregate analytics on the Impact Dashboard. |
 
-Thanks to the DEV team for the theme — building something in the spirit of
-generosity was a genuinely nice way to spend a weekend. 💚
+**A "Bring Your Own Key" mode** lets anyone (including the judges) paste their own API keys in the browser to test the live features — the keys stay on your device and are never stored on the server.
+
+## Tech stack
+
+Built with [**Next.js 16**](https://nextjs.org/) (React 19), [**Bun**](https://bun.sh/), [**Tailwind CSS v4**](https://tailwindcss.com/), and [**shadcn/ui**](https://ui.shadcn.com/) on [Base UI](https://base-ui.com/) — scaffolded with [`create-notils`](https://www.npmjs.com/package/create-notils) and linted with [Biome](https://biomejs.dev/).
+
+**A note on honesty:** no real money ever moves — the blockchain entry is a symbolic, public "anchor," not custody of funds. And every integration *degrades gracefully*: if a key or service isn't available, the app keeps working and clearly tells you which parts are live vs. simulated. That transparency felt exactly right for a project about trust.
+
+## What I learned
+
+The biggest takeaway: **trust in charity isn't about a bigger promise — it's about a smaller, verifiable receipt.** Putting a donation on a public ledger, then wrapping it in a genuinely warm AI thank-you, made a tiny $5 gift feel both *accountable* and *human* at the same time.
+
+Thanks to the [DEV team](https://dev.to/devteam) for the theme — building in the spirit of generosity was a genuinely lovely way to spend a weekend. 💚

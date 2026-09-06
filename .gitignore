@@ -48,3 +48,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# runtime logs & local secrets
+*.log
+snowflake.log
+devnet-treasury.json
+*-keypair.json

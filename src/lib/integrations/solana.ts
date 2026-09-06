@@ -35,7 +35,13 @@ export interface LedgerResult {
   explorerUrl: string;
 }
 
-const CLUSTER = process.env.SOLANA_CLUSTER ?? "devnet";
+const CLUSTER = (process.env.SOLANA_CLUSTER ?? "devnet").trim();
+
+/** Resolve the RPC endpoint, tolerating stray whitespace / empty values. */
+function resolveRpcUrl(): string {
+  const configured = process.env.SOLANA_RPC_URL?.trim();
+  return configured && configured.length > 0 ? configured : clusterApiUrl(CLUSTER as "devnet");
+}
 
 function explorerUrl(signature: string, cluster: string): string {
   return `https://explorer.solana.com/tx/${signature}?cluster=${cluster}`;
@@ -77,10 +83,7 @@ export async function anchorDonation(reference: string): Promise<LedgerResult> {
   if (!treasury) return simulatedSignature(reference);
 
   try {
-    const connection = new Connection(
-      process.env.SOLANA_RPC_URL ?? clusterApiUrl(CLUSTER as "devnet"),
-      "confirmed"
-    );
+    const connection = new Connection(resolveRpcUrl(), "confirmed");
 
     // Symbolic on-chain footprint: a tiny self-transfer that carries the
     // donation reference in the transaction, anchoring it publicly.
