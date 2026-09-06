@@ -8,7 +8,11 @@ import { getStats } from "@/lib/donations/queries";
 import { usd } from "@/lib/format";
 import { generateImpactSummary } from "@/lib/integrations/gemini";
 
-export const dynamic = "force-dynamic";
+// Cache the rendered page and refresh it in the background at most once per
+// minute (ISR). After the first load, visits serve instantly from cache instead
+// of re-querying Snowflake + Gemini on every navigation. A new donation also
+// revalidates this route on demand (see the donate API route).
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Impact · OpenPledge",

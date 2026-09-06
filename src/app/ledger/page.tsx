@@ -8,7 +8,9 @@ import { getLedger } from "@/lib/donations/queries";
 import { relativeTime, shortSig, usd } from "@/lib/format";
 import { ledgerExplorerUrl } from "@/lib/integrations/solana";
 
-export const dynamic = "force-dynamic";
+// Cache and refresh at most once per minute; a new donation revalidates this
+// route on demand (see the donate API route), so gifts still appear instantly.
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Public Ledger · OpenPledge",

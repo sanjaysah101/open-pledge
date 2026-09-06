@@ -1,3 +1,5 @@
+import { revalidatePath } from "next/cache";
+
 import { z } from "zod";
 
 import { getCampaign } from "@/lib/donations/campaigns";
@@ -89,6 +91,12 @@ export async function POST(request: Request) {
 
   // 3. Mirror into Snowflake for analytics (best-effort, non-blocking).
   await recordDonationInWarehouse(donation);
+
+  // 4. Refresh the cached transparency pages so this gift appears immediately
+  //    instead of waiting for the timed revalidation window.
+  revalidatePath("/impact");
+  revalidatePath("/ledger");
+  revalidatePath(`/campaigns/${campaign.slug}`);
 
   return Response.json(
     {
