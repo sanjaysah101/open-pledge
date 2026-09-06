@@ -22,6 +22,17 @@ import { CATEGORY_LABELS } from "@/lib/donations/types";
  *    field on ImpactStats tells the UI which path produced the numbers.
  */
 
+/** How long to wait on Snowflake before giving up and using the local path. */
+const SNOWFLAKE_TIMEOUT_MS = Number(process.env.SNOWFLAKE_TIMEOUT_MS ?? 8000);
+
+/** Reject after `ms` so a suspended warehouse never stalls the page render. */
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((_, reject) => setTimeout(() => reject(new Error("snowflake timeout")), ms)),
+  ]);
+}
+
 function isConfigured(): boolean {
   return Boolean(
     process.env.SNOWFLAKE_ACCOUNT &&
@@ -107,7 +118,7 @@ async function statsFromSnowflake(): Promise<ImpactStats | null> {
   if (!isConfigured()) return null;
   let connection: snowflake.Connection | undefined;
   try {
-    connection = await connect();
+    connection = await withTimeout(connect(), SNOWFLAKE_TIMEOUT_MS);
     await execute(connection, CREATE_TABLE);
 
     const [totals] = await execute<{
