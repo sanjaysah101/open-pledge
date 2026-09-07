@@ -8,8 +8,8 @@ export const metadata: Metadata = {
   description: "Browse small-nonprofit campaigns and give with full transparency.",
 };
 
-export default function CampaignsPage() {
-  const campaigns = getCampaignsWithProgress();
+export default async function CampaignsPage() {
+  const campaigns = await getCampaignsWithProgress();
 
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-12">

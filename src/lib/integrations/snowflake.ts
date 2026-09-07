@@ -223,3 +223,61 @@ export async function getImpactStats(donations: Donation[]): Promise<ImpactStats
   if (remote && remote.donationCount > 0) return remote;
   return statsFromLocal(donations);
 }
+
+/**
+ * Read the full donation list from Snowflake (the source of truth), newest
+ * first. Returns null when Snowflake isn't configured, unreachable, or empty —
+ * callers then fall back to the in-memory demo store. Reconstructs the display
+ * fields the table doesn't persist (campaign title, cluster) from the catalog.
+ */
+export async function listDonationsFromWarehouse(): Promise<Donation[] | null> {
+  if (!isConfigured()) return null;
+  let connection: snowflake.Connection | undefined;
+  try {
+    connection = await withTimeout(connect(), SNOWFLAKE_TIMEOUT_MS);
+    await execute(connection, CREATE_TABLE);
+
+    const rows = await execute<{
+      ID: string;
+      CAMPAIGN_ID: string;
+      DONOR_NAME: string;
+      AMOUNT_USD: number;
+      TX_SIGNATURE: string;
+      LEDGER_STATUS: string;
+      CREATED_AT: string | Date;
+    }>(
+      connection,
+      `SELECT ID, CAMPAIGN_ID, DONOR_NAME, AMOUNT_USD, TX_SIGNATURE, LEDGER_STATUS, CREATED_AT
+       FROM DONATIONS ORDER BY CREATED_AT DESC`
+    );
+
+    if (rows.length === 0) return null;
+
+    const cluster = (process.env.SOLANA_CLUSTER ?? "devnet").trim();
+    return rows.map((r) => {
+      const campaign = getCampaign(r.CAMPAIGN_ID);
+      const createdAt =
+        r.CREATED_AT instanceof Date
+          ? r.CREATED_AT.toISOString()
+          : new Date(r.CREATED_AT).toISOString();
+      return {
+        id: r.ID,
+        campaignId: r.CAMPAIGN_ID,
+        campaignTitle: campaign?.title ?? "Campaign",
+        donorName: r.DONOR_NAME,
+        amountUsd: Number(r.AMOUNT_USD),
+        createdAt,
+        txSignature: r.TX_SIGNATURE,
+        ledgerStatus: (r.LEDGER_STATUS === "confirmed"
+          ? "confirmed"
+          : "simulated") as Donation["ledgerStatus"],
+        cluster,
+        hasVoiceReceipt: false,
+      } satisfies Donation;
+    });
+  } catch {
+    return null;
+  } finally {
+    connection?.destroy(() => void 0);
+  }
+}

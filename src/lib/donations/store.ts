@@ -108,9 +108,22 @@ function seed(): Donation[] {
   }));
 }
 
+/**
+ * Whether Snowflake is the configured source of truth. When it is, we do NOT
+ * seed demo rows — the ledger reads real donations from the warehouse, and the
+ * in-memory store starts empty so stale sample data never masks real gifts.
+ */
+function snowflakeConfigured(): boolean {
+  return Boolean(
+    process.env.SNOWFLAKE_ACCOUNT &&
+      process.env.SNOWFLAKE_USERNAME &&
+      process.env.SNOWFLAKE_PASSWORD
+  );
+}
+
 function db(): Donation[] {
   if (!globalForStore.__openpledge_donations) {
-    globalForStore.__openpledge_donations = seed();
+    globalForStore.__openpledge_donations = snowflakeConfigured() ? [] : seed();
   }
   return globalForStore.__openpledge_donations;
 }

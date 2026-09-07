@@ -17,8 +17,8 @@ export const metadata: Metadata = {
   description: "Every donation, recorded openly and anchored on Solana.",
 };
 
-export default function LedgerPage() {
-  const ledger = getLedger();
+export default async function LedgerPage() {
+  const ledger = await getLedger();
 
   return (
     <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-12">

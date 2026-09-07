@@ -8,7 +8,7 @@ import { getCampaignsWithProgress, getStats } from "@/lib/donations/queries";
 import { usd } from "@/lib/format";
 
 export default async function Home() {
-  const campaigns = getCampaignsWithProgress();
+  const campaigns = await getCampaignsWithProgress();
   const stats = await getStats();
   const featured = campaigns.slice(0, 3);
 

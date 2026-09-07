@@ -12,6 +12,10 @@ import { getCampaignDonations, getCampaignWithProgress } from "@/lib/donations/q
 import { CATEGORY_LABELS } from "@/lib/donations/types";
 import { relativeTime, usd } from "@/lib/format";
 
+// Refresh cached campaign pages at least once a minute; a new donation also
+// revalidates the specific campaign on demand (see the donate API route).
+export const revalidate = 60;
+
 export function generateStaticParams() {
   return CAMPAIGNS.map((c) => ({ slug: c.slug }));
 }
@@ -22,7 +26,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const campaign = getCampaignWithProgress(slug);
+  const campaign = await getCampaignWithProgress(slug);
   if (!campaign) return { title: "Campaign not found · OpenPledge" };
   return {
     title: `${campaign.title} · OpenPledge`,
@@ -32,10 +36,10 @@ export async function generateMetadata({
 
 export default async function CampaignDetail({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const campaign = getCampaignWithProgress(slug);
+  const campaign = await getCampaignWithProgress(slug);
   if (!campaign) notFound();
 
-  const donations = getCampaignDonations(campaign.id);
+  const donations = await getCampaignDonations(campaign.id);
 
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-10">
