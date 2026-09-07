@@ -3,6 +3,9 @@ import Link from "next/link";
 import { HandHeart } from "lucide-react";
 
 import { ByokDialog } from "@/components/byok-dialog";
+import { GithubIcon } from "@/components/icons/github-icon";
+import { Button } from "@/components/ui/button";
+import { GITHUB_URL } from "@/lib/site";
 import { ThemeToggle } from "@/theme/theme-toggle";
 
 const NAV = [
@@ -40,6 +43,22 @@ export function SiteHeader() {
           <div className="hidden sm:block">
             <ByokDialog />
           </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 rounded-md"
+            nativeButton={false}
+            render={
+              <a
+                href={GITHUB_URL}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="View source on GitHub"
+              />
+            }
+          >
+            <GithubIcon className="size-4" />
+          </Button>
           <ThemeToggle />
         </div>
       </div>
